@@ -3,12 +3,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import os from 'os';
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
 import { errorHandler } from './middleware/errorHandler';
+import { connectDB, getDbStatus } from './config/db';
 
 import authRoutes from './routes/authRoutes';
 import projectRoutes from './routes/projectRoutes';
@@ -27,7 +29,7 @@ export const app = express();
 
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
-// Trust proxy for rate limiting behind load balancers/Vercel proxies
+// Trust proxy for rate limiting behind Vercel edge proxies / load balancers
 app.set('trust proxy', 1);
 
 // Security Headers with Helmet
@@ -44,7 +46,6 @@ app.use(
       // Allow requests with no origin (like mobile apps, curl, or server-to-server)
       if (!origin) return callback(null, true);
 
-      // Allowed origins list
       const allowedOrigins = [
         CLIENT_URL,
         'http://localhost:5173',
@@ -61,7 +62,8 @@ app.use(
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error(`CORS blocked for origin: ${origin}`));
+        // Reject without throwing unhandled Error
+        callback(null, false);
       }
     },
     credentials: true,
@@ -99,19 +101,44 @@ app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // Static uploads directory (for local dev fallback)
-const UPLOADS_DIR = path.resolve(__dirname, '../uploads');
-app.use('/uploads', express.static(UPLOADS_DIR));
+const isServerless = process.env.VERCEL || process.env.NODE_ENV === 'production';
+const UPLOADS_DIR = isServerless
+  ? path.join(os.tmpdir(), 'scaleup-uploads')
+  : path.resolve(__dirname, '../uploads');
+try {
+  app.use('/uploads', express.static(UPLOADS_DIR));
+} catch {}
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
+// Health check endpoint (always available, does not block on DB)
+const handleHealth = (req: express.Request, res: express.Response) => {
+  const dbStatus = getDbStatus();
   res.status(200).json({
-    status: 'ok',
-    brand: 'ScaleUp Media API',
-    tagline: 'Growth. Strategy. Impact.',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
+    success: true,
+    message: 'ScaleUp Media API is running',
+    data: {
+      api: 'ok',
+      database: dbStatus,
+      environment: process.env.NODE_ENV || 'development',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    },
   });
+};
+
+app.get('/api/health', handleHealth);
+app.get('/health', handleHealth);
+
+// Lazy database connection for all non-health API endpoints
+app.use('/api', async (req, res, next) => {
+  if (req.path === '/health') {
+    return next();
+  }
+  try {
+    await connectDB();
+  } catch (err: any) {
+    console.warn('[Database] Async connection notice:', err.message);
+  }
+  next();
 });
 
 // API Routes
@@ -131,6 +158,7 @@ app.use('/api/theme', themeRoutes);
 // Root greeting endpoint
 app.get('/', (req, res) => {
   res.status(200).json({
+    success: true,
     message: 'ScaleUp Media REST API Server',
     status: 'active',
     documentation: '/api/health',

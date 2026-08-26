@@ -27,12 +27,19 @@ const reviewSubmitLimiter = rateLimit({
 // Multer config for optional profile image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.resolve(__dirname, '../../uploads/reviews');
-    const fs = require('fs');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    const isServerless = process.env.VERCEL || process.env.NODE_ENV === 'production';
+    const uploadDir = isServerless
+      ? path.join(require('os').tmpdir(), 'scaleup-reviews')
+      : path.resolve(__dirname, '../../uploads/reviews');
+    try {
+      const fs = require('fs');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      cb(null, uploadDir);
+    } catch (err) {
+      cb(null, require('os').tmpdir());
     }
-    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);

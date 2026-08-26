@@ -14,7 +14,11 @@ import { SectionSettings, ISectionSettings } from '../models/SectionSettings';
 import { ContactSettings, IContactSettings } from '../models/ContactSettings';
 import { defaultSeedData } from '../seed/seedData';
 
-const DATA_DIR = path.resolve(__dirname, '../../data');
+import os from 'os';
+
+const DATA_DIR = process.env.VERCEL || process.env.NODE_ENV === 'production'
+  ? path.join(os.tmpdir(), 'scaleup-data')
+  : path.resolve(__dirname, '../../data');
 const STORE_FILE = path.join(DATA_DIR, 'store.json');
 
 interface MemoryStoreData {
