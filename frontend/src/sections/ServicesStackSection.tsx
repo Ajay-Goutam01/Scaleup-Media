@@ -155,7 +155,7 @@ export const ServicesStackSection: React.FC = () => {
         },
       });
 
-      // Set initial desktop positions
+      // Set initial desktop positions with full solid opacity
       cards.forEach((card, index) => {
         if (index === 0) {
           gsap.set(card, { zIndex: 10, scale: 1, opacity: 1, y: 0, rotateX: 0 });
@@ -163,14 +163,14 @@ export const ServicesStackSection: React.FC = () => {
           gsap.set(card, {
             zIndex: 10 + index,
             y: '105%',
-            scale: 0.95,
-            opacity: 0,
-            rotateX: -6,
+            scale: 0.96,
+            opacity: 1,
+            rotateX: -4,
           });
         }
       });
 
-      // Transitions
+      // Smooth 3D deck transitions with fully readable active cards
       cards.forEach((card, index) => {
         if (index < cards.length - 1) {
           const nextCard = cards[index + 1];
@@ -178,10 +178,10 @@ export const ServicesStackSection: React.FC = () => {
           tl.to(
             card,
             {
-              scale: 0.88,
-              y: -18,
-              opacity: 0.2,
-              rotateX: 8,
+              scale: 0.92,
+              y: -16,
+              opacity: 0.65,
+              rotateX: 4,
               duration: 1,
               ease: 'power2.inOut',
             },
@@ -205,22 +205,21 @@ export const ServicesStackSection: React.FC = () => {
     });
 
     mm.add('(max-width: 767px)', () => {
-      // Mobile: Natural fluid scroll reveal without pinning traps
-      // Scope selector to wrapper ref
+      // Mobile: Natural fluid reveal with fully solid, crisp cards
       const cards = gsap.utils.toArray<HTMLElement>('.service-stack-card', cardsWrapperRef.current);
       cards.forEach((card) => {
         gsap.fromTo(
           card,
-          { opacity: 0.2, y: 20 },
+          { opacity: 0.9, y: 15 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
+            duration: 0.4,
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: card,
               start: 'top 90%',
-              end: 'top 50%',
-              toggleActions: 'play none none reverse',
+              toggleActions: 'play none none none',
             },
           }
         );
