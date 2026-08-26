@@ -69,20 +69,20 @@ export const Navbar: React.FC = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
+        <div className="flex items-center justify-between gap-4 sm:gap-6 lg:gap-8">
+          {/* Brand Logo Container */}
+          <Link to="/" className="flex items-center gap-3 group shrink-0 h-10 sm:h-12 md:h-14 lg:h-14">
             {branding?.logoUrl ? (
               <img
-                src={getOptimizedImageUrl(branding.logoUrl, { width: 450, quality: 95 })}
+                src={getOptimizedImageUrl(branding.logoUrl, { width: 600, quality: 95 })}
                 alt={branding.brandName || 'ScaleUp Media'}
-                className="h-10 sm:h-12 md:h-14 w-auto max-w-[190px] sm:max-w-[240px] md:max-w-[280px] object-contain object-left transition-transform group-hover:scale-105"
+                className="h-full w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[340px] object-contain object-left block transition-transform duration-300 group-hover:scale-105"
                 loading="eager"
               />
             ) : (
               <>
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] shadow-md group-hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] shadow-md group-hover:scale-105 transition-transform duration-300">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
                     <path
                       d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z"
                       fill="var(--theme-accent)"
@@ -90,12 +90,12 @@ export const Navbar: React.FC = () => {
                     <circle cx="12" cy="5" r="2" fill="var(--theme-primary)" />
                   </svg>
                 </div>
-                <div>
-                  <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--theme-text)] font-display block leading-none">
+                <div className="flex flex-col justify-center">
+                  <span className="text-2xl sm:text-3xl md:text-3xl font-black tracking-tight text-[var(--theme-text)] font-display block leading-none">
                     {branding?.brandName ? branding.brandName.replace(' Media', '') : 'ScaleUp'}<span className="text-[var(--theme-accent)]">.</span>
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-[var(--theme-text-secondary)] uppercase block mt-0.5">
-                    {branding?.brandName && branding.brandName.includes(' ') ? branding.brandName.split(' ').slice(1).join(' ') : 'Media'}
+                  <span className="text-[11px] sm:text-xs font-black tracking-[0.25em] text-[var(--theme-text-secondary)] uppercase block mt-1">
+                    {branding?.brandName && branding.brandName.includes(' ') ? branding.brandName.split(' ').slice(1).join(' ') : 'MEDIA'}
                   </span>
                 </div>
               </>

@@ -35,21 +35,21 @@ export const Footer: React.FC = () => {
       <div className="absolute bottom-0 left-1/4 w-80 h-80 rounded-full bg-[var(--theme-accent)]/10 blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-[var(--theme-border)]">
-          {/* Col 1 & 2: Brand statement */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-16 border-b border-[var(--theme-border)]">
+          {/* Col 1 & 2: Brand statement & Logo */}
           <div className="lg:col-span-2 space-y-6">
-            <Link to="/" className="inline-flex items-center gap-3 group">
+            <Link to="/" className="inline-flex items-center gap-3 group h-12 sm:h-16 md:h-20">
               {branding?.logoUrl ? (
                 <img
-                  src={getOptimizedImageUrl(branding.logoUrl, { width: 500, quality: 95 })}
+                  src={getOptimizedImageUrl(branding.logoUrl, { width: 600, quality: 95 })}
                   alt={branding.brandName || 'ScaleUp Media'}
-                  className="h-12 sm:h-16 md:h-20 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[320px] object-contain object-left transition-transform group-hover:scale-105"
+                  className="h-full w-auto max-w-[240px] sm:max-w-[300px] md:max-w-[340px] object-contain object-left block transition-transform group-hover:scale-105"
                   loading="lazy"
                 />
               ) : (
                 <>
-                  <div className="w-[52px] h-[52px] sm:w-14 sm:h-14 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] group-hover:scale-105 transition-transform">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 sm:w-8 sm:h-8">
+                  <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] group-hover:scale-105 transition-transform shadow-md">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 sm:w-9 sm:h-9">
                       <path d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z" fill="var(--theme-accent)" />
                       <circle cx="12" cy="5" r="2" fill="var(--theme-primary)" />
                     </svg>
@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
               )}
             </Link>
 
-            <p className="text-base text-[var(--theme-text-secondary)] max-w-sm leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--theme-text-secondary)] max-w-sm leading-relaxed">
               We engineer hyper-engaging creative assets, high-ROAS advertising funnels, and modern digital platforms that transform attention into measurable business growth.
             </p>
 
@@ -77,10 +77,10 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 3: Navigation */}
+          {/* Col 3: Navigation Links */}
           <div>
             <h4 className="text-sm font-bold tracking-wider text-[var(--theme-text)] uppercase mb-5 font-display">
-              Explore
+              Navigation
             </h4>
             <ul className="space-y-3">
               {[
@@ -89,6 +89,7 @@ export const Footer: React.FC = () => {
                 { name: 'Why ScaleUp', href: '/#why-scaleup' },
                 { name: 'Our Process', href: '/#process' },
                 { name: 'ScaleUp Promise', href: '/#promise' },
+                { name: 'About Founder', href: '/#founder' },
               ].map((item) => (
                 <li key={item.name}>
                   <a
@@ -103,7 +104,21 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Col 4: Official Contact Settings */}
+          {/* Col 4: Capabilities */}
+          <div>
+            <h4 className="text-sm font-bold tracking-wider text-[var(--theme-text)] uppercase mb-5 font-display">
+              Capabilities
+            </h4>
+            <ul className="space-y-2.5 text-sm text-[var(--theme-text-secondary)]">
+              <li className="hover:text-[var(--theme-text)] transition-colors">Short-Form Video Production</li>
+              <li className="hover:text-[var(--theme-text)] transition-colors">Performance Meta &amp; Google Ads</li>
+              <li className="hover:text-[var(--theme-text)] transition-colors">Brand Identity &amp; Creative Strategy</li>
+              <li className="hover:text-[var(--theme-text)] transition-colors">High-Converting Digital Assets</li>
+              <li className="hover:text-[var(--theme-text)] transition-colors">Social Growth &amp; Content Engine</li>
+            </ul>
+          </div>
+
+          {/* Col 5: Official Contact Info */}
           <div>
             <h4 className="text-sm font-bold tracking-wider text-[var(--theme-text)] uppercase mb-5 font-display">
               Connect Directly
@@ -149,95 +164,6 @@ export const Footer: React.FC = () => {
                 </a>
               </li>
             </ul>
-          </div>
-
-          {/* Col 5: Founder & Leadership */}
-          <div>
-            <h4 className="text-sm font-bold tracking-wider text-[var(--theme-text)] uppercase mb-5 font-display">
-              Leadership
-            </h4>
-            <div className="p-5 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] space-y-3.5">
-              {/* Founder Header: Photo & Identity */}
-              <div className="flex items-center gap-3.5">
-                {contact?.founderPhotoUrl ? (
-                  <img
-                    src={getOptimizedImageUrl(contact.founderPhotoUrl, { width: 250, height: 250, quality: 90 })}
-                    alt={contact?.founderName || 'Shivam'}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border border-[var(--theme-border)] shadow-sm shrink-0"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--theme-surface)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] font-black text-xl shadow-sm shrink-0 font-display">
-                    {(contact?.founderName || 'Shivam').charAt(0).toUpperCase()}
-                  </div>
-                )}
-
-                <div className="min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--theme-accent)] block">
-                    FOUNDER
-                  </span>
-                  <h5 className="text-base font-extrabold text-[var(--theme-text)] font-display tracking-tight leading-snug truncate">
-                    {contact?.founderName || 'Shivam'}
-                  </h5>
-                  {founderInstagram && (
-                    <a
-                      href={`https://instagram.com/${cleanFounder}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-semibold text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors inline-flex items-center gap-1 mt-0.5"
-                    >
-                      <span className="truncate">{founderInstagram}</span>
-                      <ExternalLink className="w-3 h-3 shrink-0" />
-                    </a>
-                  )}
-                </div>
-              </div>
-
-              {/* Bio */}
-              <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed font-normal">
-                {contact?.founderBio ||
-                  'Building brands through smart business strategy, creative marketing and high-impact content. From shooting and editing to paid advertising, we turn ideas into digital growth.'}
-              </p>
-
-              {/* Social Channels */}
-              {(contact?.founderLinkedin || contact?.linkedin || contact?.founderFacebook || contact?.facebook || contact?.founderYoutube || contact?.youtube) && (
-                <div className="flex items-center gap-2 pt-3 border-t border-[var(--theme-border)]">
-                  {(contact?.founderLinkedin || contact?.linkedin) && (
-                    <a
-                      href={contact.founderLinkedin || contact.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                      aria-label="LinkedIn"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                    </a>
-                  )}
-                  {(contact?.founderFacebook || contact?.facebook) && (
-                    <a
-                      href={contact.founderFacebook || contact.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                      aria-label="Facebook"
-                    >
-                      <Facebook className="w-4 h-4" />
-                    </a>
-                  )}
-                  {(contact?.founderYoutube || contact?.youtube) && (
-                    <a
-                      href={contact.founderYoutube || contact.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                      aria-label="YouTube"
-                    >
-                      <Youtube className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
           </div>
         </div>
 

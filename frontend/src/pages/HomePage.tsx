@@ -10,6 +10,7 @@ import { ReviewSubmissionSection } from '../sections/ReviewSubmissionSection';
 import { OurProcessSection } from '../sections/OurProcessSection';
 import { ScaleUpPromiseSection } from '../sections/ScaleUpPromiseSection';
 import { FinalCTASection } from '../sections/FinalCTASection';
+import { FounderSection } from '../sections/FounderSection';
 import { Footer } from '../components/common/Footer';
 import { FloatingWhatsApp } from '../components/common/FloatingWhatsApp';
 import { useSettings } from '../context/SettingsContext';
@@ -33,6 +34,7 @@ export const HomePage: React.FC = () => {
         {sections?.process !== false && <OurProcessSection />}
         {sections?.promise !== false && <ScaleUpPromiseSection />}
         {sections?.cta !== false && <FinalCTASection />}
+        <FounderSection />
       </main>
 
       {sections?.footer !== false && <Footer />}

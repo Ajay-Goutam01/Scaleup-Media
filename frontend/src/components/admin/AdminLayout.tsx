@@ -75,17 +75,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* Brand */}
         <div>
           <div className="p-6 border-b border-[var(--theme-border)] flex items-center justify-between">
-            <Link to="/" target="_blank" className="flex items-center gap-2.5">
+            <Link to="/" target="_blank" className="flex items-center gap-2.5 h-12">
               {branding?.logoUrl ? (
                 <img
                   src={branding.logoUrl}
                   alt={branding.brandName || 'ScaleUp Media'}
-                  className="h-11 w-auto object-contain"
+                  className="h-full w-auto max-w-[190px] object-contain object-left block"
                 />
               ) : (
                 <>
-                  <div className="w-11 h-11 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)]">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+                  <div className="w-12 h-12 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] shadow-sm">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7">
                       <path d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z" fill="var(--theme-accent)" />
                       <circle cx="12" cy="5" r="2" fill="var(--theme-primary)" />
                     </svg>
