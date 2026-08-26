@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
+import { getOptimizedImageUrl } from '../../utils/imageKit';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -78,7 +79,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <Link to="/" target="_blank" className="flex items-center gap-2.5 h-12">
               {branding?.logoUrl ? (
                 <img
-                  src={branding.logoUrl}
+                  src={getOptimizedImageUrl(branding.logoUrl, { trim: true, quality: 95 })}
                   alt={branding.brandName || 'ScaleUp Media'}
                   className="h-full w-auto max-w-[190px] object-contain object-left block"
                 />

@@ -11,6 +11,7 @@ export interface ImageKitOptions {
   format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
   crop?: 'maintain_ratio' | 'force' | 'at_max' | 'at_least';
   blur?: number;
+  trim?: boolean | number;
 }
 
 /**
@@ -39,10 +40,14 @@ export const getOptimizedImageUrl = (
     format = 'auto',
     crop = 'maintain_ratio',
     blur,
+    trim,
   } = options;
 
   const transforms: string[] = [];
 
+  if (trim) {
+    transforms.push(typeof trim === 'number' ? `t-${trim}` : 't-true');
+  }
   if (width) transforms.push(`w-${width}`);
   if (height) transforms.push(`h-${height}`);
   if (quality) transforms.push(`q-${quality}`);

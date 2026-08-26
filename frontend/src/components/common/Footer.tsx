@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
             <Link to="/" className="inline-flex items-center gap-3 group h-12 sm:h-16 md:h-20">
               {branding?.logoUrl ? (
                 <img
-                  src={getOptimizedImageUrl(branding.logoUrl, { width: 600, quality: 95 })}
+                  src={getOptimizedImageUrl(branding.logoUrl, { trim: true, quality: 95 })}
                   alt={branding.brandName || 'ScaleUp Media'}
                   className="h-full w-auto max-w-[240px] sm:max-w-[300px] md:max-w-[340px] object-contain object-left block transition-transform group-hover:scale-105"
                   loading="lazy"

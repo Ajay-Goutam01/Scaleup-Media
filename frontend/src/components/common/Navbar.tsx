@@ -99,7 +99,7 @@ export const Navbar: React.FC = () => {
               flex items-center
               shrink-0
               group
-              h-12 sm:h-14 md:h-16 lg:h-[68px]
+              h-9 sm:h-10 md:h-11 lg:h-12
               min-w-0
             "
             aria-label={branding?.brandName || 'ScaleUp Media'}
@@ -107,17 +107,17 @@ export const Navbar: React.FC = () => {
             {branding?.logoUrl ? (
               <img
                 src={getOptimizedImageUrl(branding.logoUrl, {
-                  width: 800,
+                  trim: true,
                   quality: 95,
                 })}
                 alt={branding.brandName || 'ScaleUp Media'}
                 className="
                   h-full
                   w-auto
-                  max-w-[190px]
-                  sm:max-w-[240px]
-                  md:max-w-[320px]
-                  lg:max-w-[390px]
+                  max-w-[160px]
+                  sm:max-w-[200px]
+                  md:max-w-[240px]
+                  lg:max-w-[280px]
                   object-contain
                   object-left
                   block
