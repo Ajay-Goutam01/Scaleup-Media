@@ -80,18 +80,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 <img
                   src={branding.logoUrl}
                   alt={branding.brandName || 'ScaleUp Media'}
-                  className="h-9 w-auto object-contain"
+                  className="h-11 w-auto object-contain"
                 />
               ) : (
                 <>
-                  <div className="w-9 h-9 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)]">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)]">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
                       <path d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z" fill="var(--theme-accent)" />
                       <circle cx="12" cy="5" r="2" fill="var(--theme-primary)" />
                     </svg>
                   </div>
                   <div>
-                    <span className="text-lg font-black tracking-tight text-[var(--theme-text)] font-display">
+                    <span className="text-xl font-black tracking-tight text-[var(--theme-text)] font-display">
                       {branding?.brandName ? branding.brandName.replace(' Media', '') : 'ScaleUp'}<span className="text-[var(--theme-accent)]">.</span>
                     </span>
                     <span className="text-[9px] font-bold tracking-widest text-[var(--theme-accent)] uppercase block">

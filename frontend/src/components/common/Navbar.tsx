@@ -75,12 +75,12 @@ export const Navbar: React.FC = () => {
               <img
                 src={branding.logoUrl}
                 alt={branding.brandName || 'ScaleUp Media'}
-                className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105"
+                className="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
               />
             ) : (
               <>
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] shadow-md group-hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 sm:w-6 sm:h-6">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] shadow-md group-hover:scale-105 transition-transform duration-300">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
                     <path
                       d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z"
                       fill="var(--theme-accent)"
@@ -89,10 +89,10 @@ export const Navbar: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <span className="text-lg sm:text-xl font-extrabold tracking-tight text-[var(--theme-text)] font-display block leading-none">
+                  <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--theme-text)] font-display block leading-none">
                     {branding?.brandName ? branding.brandName.replace(' Media', '') : 'ScaleUp'}<span className="text-[var(--theme-accent)]">.</span>
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold tracking-widest text-[var(--theme-text-secondary)] uppercase block mt-0.5">
+                  <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-[var(--theme-text-secondary)] uppercase block mt-0.5">
                     {branding?.brandName && branding.brandName.includes(' ') ? branding.brandName.split(' ').slice(1).join(' ') : 'Media'}
                   </span>
                 </div>
