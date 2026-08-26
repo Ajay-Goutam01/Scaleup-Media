@@ -93,133 +93,154 @@ export const Navbar: React.FC = () => {
               BRAND LOGO
           ========================================================= */}
 
-          <Link
-            to="/"
+          <div
             className="
-              flex items-center
-              shrink-0
-              group
-              h-9 sm:h-10 md:h-11 lg:h-12
-              min-w-0
+              flex-none
+              flex
+              items-center
+              justify-start
+              min-w-[110px]
+              sm:min-w-[150px]
+              md:min-w-[190px]
+              lg:min-w-[240px]
+              max-w-[140px]
+              sm:max-w-[200px]
+              md:max-w-[260px]
+              lg:max-w-[320px]
+              h-[48px]
+              sm:h-[56px]
+              md:h-[68px]
+              lg:h-[76px]
             "
-            aria-label={branding?.brandName || 'ScaleUp Media'}
           >
-            {branding?.logoUrl ? (
-              <img
-                src={getOptimizedImageUrl(branding.logoUrl, {
-                  trim: true,
-                  quality: 95,
-                })}
-                alt={branding.brandName || 'ScaleUp Media'}
-                className="
-                  h-full
-                  w-auto
-                  max-w-[160px]
-                  sm:max-w-[200px]
-                  md:max-w-[240px]
-                  lg:max-w-[280px]
-                  object-contain
-                  object-left
-                  block
-                  transition-transform
-                  duration-300
-                  group-hover:scale-105
-                "
-                loading="eager"
-                decoding="async"
-              />
-            ) : (
-              <>
-                {/* Fallback Logo Icon */}
-                <div
+            <Link
+              to="/"
+              className="
+                flex
+                items-center
+                justify-start
+                w-full
+                h-full
+                group
+              "
+              aria-label={branding?.brandName || 'ScaleUp Media'}
+            >
+              {branding?.logoUrl ? (
+                <img
+                  src={getOptimizedImageUrl(branding.logoUrl, {
+                    trim: true,
+                    quality: 95,
+                  })}
+                  alt={branding.brandName || 'ScaleUp Media'}
                   className="
-                    h-10 w-10
-                    sm:h-12 sm:w-12
-                    md:h-14 md:w-14
-                    rounded-2xl
-                    bg-[var(--theme-surface-secondary)]
-                    border
-                    border-[var(--theme-border)]
-                    flex
-                    items-center
-                    justify-center
-                    text-[var(--theme-accent)]
-                    shadow-md
-                    group-hover:scale-105
+                    h-[42px]
+                    sm:h-[50px]
+                    md:h-[60px]
+                    lg:h-[68px]
+                    w-auto
+                    max-w-full
+                    object-contain
+                    object-left
+                    block
                     transition-transform
                     duration-300
-                    shrink-0
+                    group-hover:scale-105
                   "
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : (
+                <>
+                  {/* Fallback Logo Icon */}
+                  <div
                     className="
-                      w-6 h-6
-                      sm:w-7 sm:h-7
-                      md:w-8 md:h-8
+                      h-11 w-11
+                      sm:h-13 sm:w-13
+                      md:h-15 md:w-15
+                      rounded-2xl
+                      bg-[var(--theme-surface-secondary)]
+                      border
+                      border-[var(--theme-border)]
+                      flex
+                      items-center
+                      justify-center
+                      text-[var(--theme-accent)]
+                      shadow-md
+                      group-hover:scale-105
+                      transition-transform
+                      duration-300
+                      shrink-0
                     "
-                    aria-hidden="true"
                   >
-                    <path
-                      d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z"
-                      fill="var(--theme-accent)"
-                    />
-                    <circle
-                      cx="12"
-                      cy="5"
-                      r="2"
-                      fill="var(--theme-primary)"
-                    />
-                  </svg>
-                </div>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="
+                        w-7 h-7
+                        sm:w-8 sm:h-8
+                        md:w-9 md:h-9
+                      "
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 17L12 7L19 17H15L12 12.5L9 17H5Z"
+                        fill="var(--theme-accent)"
+                      />
+                      <circle
+                        cx="12"
+                        cy="5"
+                        r="2"
+                        fill="var(--theme-primary)"
+                      />
+                    </svg>
+                  </div>
 
-                {/* Fallback Brand Name */}
-                <div className="flex flex-col justify-center ml-2 sm:ml-3">
-                  <span
-                    className="
-                      text-xl
-                      sm:text-2xl
-                      md:text-3xl
-                      font-black
-                      tracking-tight
-                      text-[var(--theme-text)]
-                      font-display
-                      block
-                      leading-none
-                    "
-                  >
-                    {branding?.brandName
-                      ? branding.brandName.replace(' Media', '')
-                      : 'ScaleUp'}
-                    <span className="text-[var(--theme-accent)]">.</span>
-                  </span>
+                  {/* Fallback Brand Name */}
+                  <div className="flex flex-col justify-center ml-2.5 sm:ml-3.5">
+                    <span
+                      className="
+                        text-2xl
+                        sm:text-3xl
+                        md:text-4xl
+                        font-black
+                        tracking-tight
+                        text-[var(--theme-text)]
+                        font-display
+                        block
+                        leading-none
+                      "
+                    >
+                      {branding?.brandName
+                        ? branding.brandName.replace(' Media', '')
+                        : 'ScaleUp'}
+                      <span className="text-[var(--theme-accent)]">.</span>
+                    </span>
 
-                  <span
-                    className="
-                      text-[9px]
-                      sm:text-[11px]
-                      font-black
-                      tracking-[0.2em]
-                      sm:tracking-[0.25em]
-                      text-[var(--theme-text-secondary)]
-                      uppercase
-                      block
-                      mt-1
-                    "
-                  >
-                    {branding?.brandName &&
-                      branding.brandName.includes(' ')
-                      ? branding.brandName
-                        .split(' ')
-                        .slice(1)
-                        .join(' ')
-                      : 'MEDIA'}
-                  </span>
-                </div>
-              </>
-            )}
-          </Link>
+                    <span
+                      className="
+                        text-[10px]
+                        sm:text-[12px]
+                        font-black
+                        tracking-[0.25em]
+                        text-[var(--theme-text-secondary)]
+                        uppercase
+                        block
+                        mt-1
+                      "
+                    >
+                      {branding?.brandName &&
+                        branding.brandName.includes(' ')
+                        ? branding.brandName
+                          .split(' ')
+                          .slice(1)
+                          .join(' ')
+                        : 'MEDIA'}
+                    </span>
+                  </div>
+                </>
+              )}
+            </Link>
+          </div>
 
           {/* =========================================================
               DESKTOP NAVIGATION
