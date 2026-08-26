@@ -12,6 +12,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
+import { getOptimizedImageUrl } from '../../utils/imageKit';
 
 export const Footer: React.FC = () => {
   const { contact, content, branding, getWhatsAppUrl } = useSettings();
@@ -40,9 +41,10 @@ export const Footer: React.FC = () => {
             <Link to="/" className="inline-flex items-center gap-3 group">
               {branding?.logoUrl ? (
                 <img
-                  src={branding.logoUrl}
+                  src={getOptimizedImageUrl(branding.logoUrl, { width: 500, quality: 95 })}
                   alt={branding.brandName || 'ScaleUp Media'}
-                  className="h-[52px] sm:h-14 w-auto object-contain transition-transform group-hover:scale-105"
+                  className="h-12 sm:h-16 md:h-20 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[320px] object-contain object-left transition-transform group-hover:scale-105"
+                  loading="lazy"
                 />
               ) : (
                 <>
@@ -149,63 +151,92 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Col 5: Founder & Social Channels */}
+          {/* Col 5: Founder & Leadership */}
           <div>
             <h4 className="text-sm font-bold tracking-wider text-[var(--theme-text)] uppercase mb-5 font-display">
               Leadership
             </h4>
-            <div className="p-4 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] space-y-3">
-              <div>
-                <p className="text-[11px] uppercase font-bold text-[var(--theme-text-secondary)] tracking-wider">
-                  Founder
-                </p>
-                <a
-                  href={`https://instagram.com/${cleanFounder}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-bold text-[var(--theme-accent)] hover:underline inline-flex items-center gap-1 mt-0.5"
-                >
-                  <span>{founderInstagram}</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
+            <div className="p-5 rounded-2xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] space-y-3.5">
+              {/* Founder Header: Photo & Identity */}
+              <div className="flex items-center gap-3.5">
+                {contact?.founderPhotoUrl ? (
+                  <img
+                    src={getOptimizedImageUrl(contact.founderPhotoUrl, { width: 250, height: 250, quality: 90 })}
+                    alt={contact?.founderName || 'Shivam'}
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border border-[var(--theme-border)] shadow-sm shrink-0"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--theme-surface)] border border-[var(--theme-border)] flex items-center justify-center text-[var(--theme-accent)] font-black text-xl shadow-sm shrink-0 font-display">
+                    {(contact?.founderName || 'Shivam').charAt(0).toUpperCase()}
+                  </div>
+                )}
+
+                <div className="min-w-0">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--theme-accent)] block">
+                    FOUNDER
+                  </span>
+                  <h5 className="text-base font-extrabold text-[var(--theme-text)] font-display tracking-tight leading-snug truncate">
+                    {contact?.founderName || 'Shivam'}
+                  </h5>
+                  {founderInstagram && (
+                    <a
+                      href={`https://instagram.com/${cleanFounder}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-semibold text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors inline-flex items-center gap-1 mt-0.5"
+                    >
+                      <span className="truncate">{founderInstagram}</span>
+                      <ExternalLink className="w-3 h-3 shrink-0" />
+                    </a>
+                  )}
+                </div>
               </div>
 
+              {/* Bio */}
+              <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed font-normal">
+                {contact?.founderBio ||
+                  'Building brands through smart business strategy, creative marketing and high-impact content. From shooting and editing to paid advertising, we turn ideas into digital growth.'}
+              </p>
+
               {/* Social Channels */}
-              <div className="flex items-center gap-2 pt-2 border-t border-[var(--theme-border)]">
-                {contact?.linkedin && (
-                  <a
-                    href={contact.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                )}
-                {contact?.facebook && (
-                  <a
-                    href={contact.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="w-4 h-4" />
-                  </a>
-                )}
-                {contact?.youtube && (
-                  <a
-                    href={contact.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
-                    aria-label="YouTube"
-                  >
-                    <Youtube className="w-4 h-4" />
-                  </a>
-                )}
-              </div>
+              {(contact?.founderLinkedin || contact?.linkedin || contact?.founderFacebook || contact?.facebook || contact?.founderYoutube || contact?.youtube) && (
+                <div className="flex items-center gap-2 pt-3 border-t border-[var(--theme-border)]">
+                  {(contact?.founderLinkedin || contact?.linkedin) && (
+                    <a
+                      href={contact.founderLinkedin || contact.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                    </a>
+                  )}
+                  {(contact?.founderFacebook || contact?.facebook) && (
+                    <a
+                      href={contact.founderFacebook || contact.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+                  {(contact?.founderYoutube || contact?.youtube) && (
+                    <a
+                      href={contact.founderYoutube || contact.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-[var(--theme-surface)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:bg-[var(--theme-surface-secondary)] transition-colors border border-[var(--theme-border)]"
+                      aria-label="YouTube"
+                    >
+                      <Youtube className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { Footer } from '../components/common/Footer';
 import { projectsApi } from '../api/projects';
 import { Project } from '../types';
 import { useSettings } from '../context/SettingsContext';
+import { getOptimizedImageUrl } from '../utils/imageKit';
 
 export const ProjectDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -97,9 +98,10 @@ export const ProjectDetailPage: React.FC = () => {
           {/* Hero Thumbnail */}
           <div className="rounded-3xl overflow-hidden border border-[var(--theme-border)] shadow-xl mb-12">
             <img
-              src={project.thumbnail}
+              src={getOptimizedImageUrl(project.thumbnail, { width: 1200, quality: 85 })}
               alt={project.title}
               className="w-full max-h-[520px] object-cover"
+              loading="eager"
             />
           </div>
 
@@ -177,9 +179,10 @@ export const ProjectDetailPage: React.FC = () => {
                 {project.gallery.map((img, idx) => (
                   <div key={idx} className="rounded-3xl overflow-hidden border border-[var(--theme-border)] shadow-md">
                     <img
-                      src={img}
+                      src={getOptimizedImageUrl(img, { width: 800, quality: 85 })}
                       alt={`${project.title} visual ${idx + 1}`}
                       className="w-full h-72 object-cover hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
                     />
                   </div>
                 ))}

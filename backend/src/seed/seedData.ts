@@ -277,6 +277,14 @@ export const defaultSeedData = {
     linkedin: 'https://linkedin.com/company/scaleupmedia',
     youtube: 'https://youtube.com/@scaleupmedia',
     address: 'Mumbai & Global Operations, India',
+    founderName: 'Shivam',
+    founderBio:
+      'Building brands through smart business strategy, creative marketing and high-impact content. From shooting and editing to paid advertising, we turn ideas into digital growth.',
+    founderPhotoUrl: '',
+    founderPhotoFileId: '',
+    founderLinkedin: '',
+    founderFacebook: '',
+    founderYoutube: '',
   },
   websiteContent: {
     heroHeading: 'WE BUILD BRANDS THAT GET NOTICED.',

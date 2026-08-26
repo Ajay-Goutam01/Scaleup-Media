@@ -45,6 +45,14 @@ const defaultContact: ContactSettings = {
   linkedin: 'https://linkedin.com/company/scaleupmedia',
   youtube: 'https://youtube.com/@scaleupmedia',
   address: 'India / Global Digital Agency',
+  founderName: 'Shivam',
+  founderBio:
+    'Building brands through smart business strategy, creative marketing and high-impact content. From shooting and editing to paid advertising, we turn ideas into digital growth.',
+  founderPhotoUrl: '',
+  founderPhotoFileId: '',
+  founderLinkedin: '',
+  founderFacebook: '',
+  founderYoutube: '',
 };
 
 const defaultContent: WebsiteContent = {

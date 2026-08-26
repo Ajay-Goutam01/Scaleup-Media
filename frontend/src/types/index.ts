@@ -112,6 +112,14 @@ export interface ContactSettings {
   linkedin: string;
   youtube: string;
   address: string;
+  // Founder / Footer Profile
+  founderName?: string;
+  founderBio?: string;
+  founderPhotoUrl?: string;
+  founderPhotoFileId?: string;
+  founderLinkedin?: string;
+  founderFacebook?: string;
+  founderYoutube?: string;
 }
 
 export interface AdminUser {

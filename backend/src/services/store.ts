@@ -34,12 +34,43 @@ interface MemoryStoreData {
   themeSettings: any;
 }
 
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
 class ResilientStore {
   private localData: MemoryStoreData;
   private isMongoConnected: boolean = false;
+  private queryCache: Map<string, CacheEntry<any>> = new Map();
+  private readonly CACHE_TTL_MS = 60 * 1000; // 60s fast read cache
 
   constructor() {
     this.localData = this.loadLocalFile();
+  }
+
+  private getFromCache<T>(key: string): T | null {
+    const entry = this.queryCache.get(key);
+    if (entry && Date.now() - entry.timestamp < this.CACHE_TTL_MS) {
+      return entry.data;
+    }
+    return null;
+  }
+
+  private setCache<T>(key: string, data: T): void {
+    this.queryCache.set(key, { data, timestamp: Date.now() });
+  }
+
+  private invalidateCache(prefix?: string): void {
+    if (!prefix) {
+      this.queryCache.clear();
+      return;
+    }
+    for (const key of Array.from(this.queryCache.keys())) {
+      if (key.startsWith(prefix)) {
+        this.queryCache.delete(key);
+      }
+    }
   }
 
   public setMongoConnected(status: boolean) {
@@ -349,37 +380,60 @@ class ResilientStore {
 
   // --- PROJECTS ---
   public async getProjects(query: { activeOnly?: boolean; featuredOnly?: boolean } = {}) {
+    const cacheKey = `projects_${query.activeOnly ? 'active' : 'all'}_${query.featuredOnly ? 'featured' : 'all'}`;
+    const cached = this.getFromCache<any[]>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
         const filter: any = {};
         if (query.activeOnly) filter.active = true;
         if (query.featuredOnly) filter.featured = true;
-        return await Project.find(filter).sort({ order: 1, createdAt: -1 });
+        const docs = await Project.find(filter).sort({ order: 1, createdAt: -1 }).lean();
+        if (docs && docs.length > 0) {
+          this.setCache(cacheKey, docs);
+          return docs;
+        }
       } catch (err) {}
     }
     let list = [...this.localData.projects];
     if (query.activeOnly) list = list.filter((p) => p.active !== false);
     if (query.featuredOnly) list = list.filter((p) => p.featured === true);
-    return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    const result = list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async getProjectByIdOrSlug(identifier: string) {
+    const cacheKey = `project_detail_${identifier}`;
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
         if (mongoose.Types.ObjectId.isValid(identifier)) {
-          const doc = await Project.findById(identifier);
-          if (doc) return doc;
+          const doc = await Project.findById(identifier).lean();
+          if (doc) {
+            this.setCache(cacheKey, doc);
+            return doc;
+          }
         }
-        const docSlug = await Project.findOne({ slug: identifier });
-        if (docSlug) return docSlug;
+        const docSlug = await Project.findOne({ slug: identifier }).lean();
+        if (docSlug) {
+          this.setCache(cacheKey, docSlug);
+          return docSlug;
+        }
       } catch (err) {}
     }
-    return this.localData.projects.find(
+    const local = this.localData.projects.find(
       (p) => p._id === identifier || p.id === identifier || p.slug === identifier
     );
+    if (local) this.setCache(cacheKey, local);
+    return local;
   }
 
   public async createProject(data: any) {
+    this.invalidateCache('project');
     if (!data.slug && data.title) {
       data.slug =
         data.title
@@ -409,6 +463,7 @@ class ResilientStore {
   }
 
   public async updateProject(id: string, updates: any) {
+    this.invalidateCache('project');
     if (mongoose.connection.readyState === 1) {
       try {
         const updated = await Project.findByIdAndUpdate(id, updates, { new: true });
@@ -434,6 +489,7 @@ class ResilientStore {
   }
 
   public async deleteProject(id: string) {
+    this.invalidateCache('project');
     if (mongoose.connection.readyState === 1) {
       try {
         await Project.findByIdAndDelete(id);
@@ -450,19 +506,30 @@ class ResilientStore {
 
   // --- SERVICES ---
   public async getServices(query: { activeOnly?: boolean } = {}) {
+    const cacheKey = `services_${query.activeOnly ? 'active' : 'all'}`;
+    const cached = this.getFromCache<any[]>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
         const filter: any = {};
         if (query.activeOnly) filter.active = true;
-        return await Service.find(filter).sort({ order: 1, serviceNumber: 1 });
+        const docs = await Service.find(filter).sort({ order: 1, serviceNumber: 1 }).lean();
+        if (docs && docs.length > 0) {
+          this.setCache(cacheKey, docs);
+          return docs;
+        }
       } catch (err) {}
     }
     let list = [...this.localData.services];
     if (query.activeOnly) list = list.filter((s) => s.active !== false);
-    return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    const result = list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async createService(data: any) {
+    this.invalidateCache('services');
     if (mongoose.connection.readyState === 1) {
       try {
         const created = await Service.create(data);
@@ -483,6 +550,7 @@ class ResilientStore {
   }
 
   public async updateService(id: string, updates: any) {
+    this.invalidateCache('services');
     if (mongoose.connection.readyState === 1) {
       try {
         const updated = await Service.findByIdAndUpdate(id, updates, { new: true });
@@ -508,6 +576,7 @@ class ResilientStore {
   }
 
   public async deleteService(id: string) {
+    this.invalidateCache('services');
     if (mongoose.connection.readyState === 1) {
       try {
         await Service.findByIdAndDelete(id);
@@ -524,19 +593,30 @@ class ResilientStore {
 
   // --- TESTIMONIALS ---
   public async getTestimonials(query: { activeOnly?: boolean } = {}) {
+    const cacheKey = `testimonials_${query.activeOnly ? 'active' : 'all'}`;
+    const cached = this.getFromCache<any[]>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
         const filter: any = {};
         if (query.activeOnly) filter.active = true;
-        return await Testimonial.find(filter).sort({ order: 1, createdAt: -1 });
+        const docs = await Testimonial.find(filter).sort({ order: 1, createdAt: -1 }).lean();
+        if (docs && docs.length > 0) {
+          this.setCache(cacheKey, docs);
+          return docs;
+        }
       } catch (err) {}
     }
     let list = [...this.localData.testimonials];
     if (query.activeOnly) list = list.filter((t) => t.active !== false);
-    return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    const result = list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async createTestimonial(data: any) {
+    this.invalidateCache('testimonials');
     if (mongoose.connection.readyState === 1) {
       try {
         const created = await Testimonial.create(data);
@@ -557,6 +637,7 @@ class ResilientStore {
   }
 
   public async updateTestimonial(id: string, updates: any) {
+    this.invalidateCache('testimonials');
     if (mongoose.connection.readyState === 1) {
       try {
         const updated = await Testimonial.findByIdAndUpdate(id, updates, { new: true });
@@ -582,6 +663,7 @@ class ResilientStore {
   }
 
   public async deleteTestimonial(id: string) {
+    this.invalidateCache('testimonials');
     if (mongoose.connection.readyState === 1) {
       try {
         await Testimonial.findByIdAndDelete(id);
@@ -598,16 +680,25 @@ class ResilientStore {
 
   // --- WEBSITE CONTENT ---
   public async getWebsiteContent() {
+    const cacheKey = 'website_content';
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
-        const doc = await WebsiteContent.findOne();
-        if (doc) return doc;
+        const doc = await WebsiteContent.findOne().lean();
+        if (doc) {
+          this.setCache(cacheKey, doc);
+          return doc;
+        }
       } catch (err) {}
     }
+    this.setCache(cacheKey, this.localData.websiteContent);
     return this.localData.websiteContent;
   }
 
   public async updateWebsiteContent(updates: any) {
+    this.invalidateCache('website_content');
     if (mongoose.connection.readyState === 1) {
       try {
         let doc = await WebsiteContent.findOne();
@@ -634,16 +725,25 @@ class ResilientStore {
 
   // --- SECTION SETTINGS ---
   public async getSectionSettings() {
+    const cacheKey = 'section_settings';
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
-        const doc = await SectionSettings.findOne();
-        if (doc) return doc;
+        const doc = await SectionSettings.findOne().lean();
+        if (doc) {
+          this.setCache(cacheKey, doc);
+          return doc;
+        }
       } catch (err) {}
     }
+    this.setCache(cacheKey, this.localData.sectionSettings);
     return this.localData.sectionSettings;
   }
 
   public async updateSectionSettings(updates: any) {
+    this.invalidateCache('section_settings');
     if (mongoose.connection.readyState === 1) {
       try {
         let doc = await SectionSettings.findOne();
@@ -670,16 +770,25 @@ class ResilientStore {
 
   // --- CONTACT SETTINGS ---
   public async getContactSettings() {
+    const cacheKey = 'contact_settings';
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
-        const doc = await ContactSettings.findOne();
-        if (doc) return doc;
+        const doc = await ContactSettings.findOne().lean();
+        if (doc) {
+          this.setCache(cacheKey, doc);
+          return doc;
+        }
       } catch (err) {}
     }
+    this.setCache(cacheKey, this.localData.contactSettings);
     return this.localData.contactSettings;
   }
 
   public async updateContactSettings(updates: any) {
+    this.invalidateCache('contact_settings');
     if (mongoose.connection.readyState === 1) {
       try {
         let doc = await ContactSettings.findOne();
@@ -731,19 +840,30 @@ class ResilientStore {
 
   // --- REVIEWS ---
   public async getReviews(query: { status?: string } = {}) {
+    const cacheKey = `reviews_${query.status || 'all'}`;
+    const cached = this.getFromCache<any[]>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
         const filter: any = {};
         if (query.status) filter.status = query.status;
-        return await Review.find(filter).sort({ order: 1, createdAt: -1 });
+        const docs = await Review.find(filter).sort({ order: 1, createdAt: -1 }).lean();
+        if (docs && docs.length > 0) {
+          this.setCache(cacheKey, docs);
+          return docs;
+        }
       } catch (err) {}
     }
     let list = [...(this.localData.reviews || [])];
     if (query.status) list = list.filter((r) => r.status === query.status);
-    return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const result = list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async createReview(data: any) {
+    this.invalidateCache('reviews');
     if (mongoose.connection.readyState === 1) {
       try {
         const created = await Review.create(data);
@@ -767,6 +887,7 @@ class ResilientStore {
   }
 
   public async updateReview(id: string, updates: any) {
+    this.invalidateCache('reviews');
     if (mongoose.connection.readyState === 1) {
       try {
         const updated = await Review.findByIdAndUpdate(id, updates, { new: true });
@@ -794,6 +915,7 @@ class ResilientStore {
   }
 
   public async deleteReview(id: string) {
+    this.invalidateCache('reviews');
     if (mongoose.connection.readyState === 1) {
       try {
         await Review.findByIdAndDelete(id);
@@ -811,16 +933,26 @@ class ResilientStore {
 
   // --- BRANDING ---
   public async getBranding() {
+    const cacheKey = 'branding';
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
-        const doc = await Branding.findOne();
-        if (doc) return doc;
+        const doc = await Branding.findOne().lean();
+        if (doc) {
+          this.setCache(cacheKey, doc);
+          return doc;
+        }
       } catch (err) {}
     }
-    return this.localData.branding || defaultSeedData.branding;
+    const result = this.localData.branding || defaultSeedData.branding;
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async updateBranding(updates: any) {
+    this.invalidateCache('branding');
     if (mongoose.connection.readyState === 1) {
       try {
         let doc = await Branding.findOne();
@@ -847,16 +979,26 @@ class ResilientStore {
 
   // --- THEME SETTINGS ---
   public async getThemeSettings() {
+    const cacheKey = 'theme_settings';
+    const cached = this.getFromCache<any>(cacheKey);
+    if (cached) return cached;
+
     if (mongoose.connection.readyState === 1) {
       try {
-        const doc = await ThemeSettings.findOne();
-        if (doc) return doc;
+        const doc = await ThemeSettings.findOne().lean();
+        if (doc) {
+          this.setCache(cacheKey, doc);
+          return doc;
+        }
       } catch (err) {}
     }
-    return this.localData.themeSettings || defaultSeedData.themeSettings;
+    const result = this.localData.themeSettings || defaultSeedData.themeSettings;
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   public async updateThemeSettings(updates: any) {
+    this.invalidateCache('theme_settings');
     if (mongoose.connection.readyState === 1) {
       try {
         let doc = await ThemeSettings.findOne();

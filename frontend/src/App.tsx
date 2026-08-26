@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -6,20 +6,52 @@ import { SettingsProvider } from './context/SettingsContext';
 import { useLenis } from './hooks/useLenis';
 
 import { HomePage } from './pages/HomePage';
-import { ProjectDetailPage } from './pages/ProjectDetailPage';
-import { NotFoundPage } from './pages/NotFoundPage';
 
-import { AdminLoginPage } from './pages/admin/AdminLoginPage';
-import { AdminChangePasswordPage } from './pages/admin/AdminChangePasswordPage';
-import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
-import { AdminProjectsPage } from './pages/admin/AdminProjectsPage';
-import { AdminServicesPage } from './pages/admin/AdminServicesPage';
-import { AdminTestimonialsPage } from './pages/admin/AdminTestimonialsPage';
-import { AdminSectionsPage } from './pages/admin/AdminSectionsPage';
-import { AdminContentPage } from './pages/admin/AdminContentPage';
-import { AdminContactPage } from './pages/admin/AdminContactPage';
-import { AdminAppearancePage } from './pages/admin/AdminAppearancePage';
-import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
+// Route-level code splitting for non-homepage views
+const ProjectDetailPage = lazy(() =>
+  import('./pages/ProjectDetailPage').then((m) => ({ default: m.ProjectDetailPage }))
+);
+const NotFoundPage = lazy(() =>
+  import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
+);
+
+const AdminLoginPage = lazy(() =>
+  import('./pages/admin/AdminLoginPage').then((m) => ({ default: m.AdminLoginPage }))
+);
+const AdminChangePasswordPage = lazy(() =>
+  import('./pages/admin/AdminChangePasswordPage').then((m) => ({
+    default: m.AdminChangePasswordPage,
+  }))
+);
+const AdminDashboardPage = lazy(() =>
+  import('./pages/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage }))
+);
+const AdminProjectsPage = lazy(() =>
+  import('./pages/admin/AdminProjectsPage').then((m) => ({ default: m.AdminProjectsPage }))
+);
+const AdminServicesPage = lazy(() =>
+  import('./pages/admin/AdminServicesPage').then((m) => ({ default: m.AdminServicesPage }))
+);
+const AdminTestimonialsPage = lazy(() =>
+  import('./pages/admin/AdminTestimonialsPage').then((m) => ({
+    default: m.AdminTestimonialsPage,
+  }))
+);
+const AdminSectionsPage = lazy(() =>
+  import('./pages/admin/AdminSectionsPage').then((m) => ({ default: m.AdminSectionsPage }))
+);
+const AdminContentPage = lazy(() =>
+  import('./pages/admin/AdminContentPage').then((m) => ({ default: m.AdminContentPage }))
+);
+const AdminContactPage = lazy(() =>
+  import('./pages/admin/AdminContactPage').then((m) => ({ default: m.AdminContactPage }))
+);
+const AdminAppearancePage = lazy(() =>
+  import('./pages/admin/AdminAppearancePage').then((m) => ({ default: m.AdminAppearancePage }))
+);
+const AdminReviewsPage = lazy(() =>
+  import('./pages/admin/AdminReviewsPage').then((m) => ({ default: m.AdminReviewsPage }))
+);
 
 // Loading spinner
 const LoadingSpinner: React.FC = () => (
@@ -71,94 +103,96 @@ const AppRoutes: React.FC = () => {
   useLenis();
 
   return (
-    <Routes>
-      {/* Public Agency Website */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/projects/:id" element={<ProjectDetailPage />} />
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        {/* Public Agency Website */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/projects/:id" element={<ProjectDetailPage />} />
 
-      {/* Admin Authentication */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
+        {/* Admin Authentication */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
 
-      {/* Admin First-Login Password Change (semi-protected) */}
-      <Route path="/admin/change-password" element={<ChangePasswordRoute />} />
+        {/* Admin First-Login Password Change (semi-protected) */}
+        <Route path="/admin/change-password" element={<ChangePasswordRoute />} />
 
-      {/* Protected Admin CMS Dashboard Routes */}
-      <Route
-        path="/admin"
-        element={
-          <ProtectedAdminRoute>
-            <AdminDashboardPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/projects"
-        element={
-          <ProtectedAdminRoute>
-            <AdminProjectsPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/services"
-        element={
-          <ProtectedAdminRoute>
-            <AdminServicesPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/testimonials"
-        element={
-          <ProtectedAdminRoute>
-            <AdminTestimonialsPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/sections"
-        element={
-          <ProtectedAdminRoute>
-            <AdminSectionsPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/content"
-        element={
-          <ProtectedAdminRoute>
-            <AdminContentPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/contact"
-        element={
-          <ProtectedAdminRoute>
-            <AdminContactPage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/appearance"
-        element={
-          <ProtectedAdminRoute>
-            <AdminAppearancePage />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/reviews"
-        element={
-          <ProtectedAdminRoute>
-            <AdminReviewsPage />
-          </ProtectedAdminRoute>
-        }
-      />
+        {/* Protected Admin CMS Dashboard Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/projects"
+          element={
+            <ProtectedAdminRoute>
+              <AdminProjectsPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/services"
+          element={
+            <ProtectedAdminRoute>
+              <AdminServicesPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/testimonials"
+          element={
+            <ProtectedAdminRoute>
+              <AdminTestimonialsPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/sections"
+          element={
+            <ProtectedAdminRoute>
+              <AdminSectionsPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/content"
+          element={
+            <ProtectedAdminRoute>
+              <AdminContentPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/contact"
+          element={
+            <ProtectedAdminRoute>
+              <AdminContactPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/appearance"
+          element={
+            <ProtectedAdminRoute>
+              <AdminAppearancePage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/reviews"
+          element={
+            <ProtectedAdminRoute>
+              <AdminReviewsPage />
+            </ProtectedAdminRoute>
+          }
+        />
 
-      {/* 404 Catch All */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        {/* 404 Catch All */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
   );
 };
 

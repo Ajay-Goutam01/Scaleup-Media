@@ -4,6 +4,7 @@ import { Menu, X, ArrowUpRight, MessageCircle, ShieldCheck } from 'lucide-react'
 import { useSettings } from '../../context/SettingsContext';
 import { useAuth } from '../../context/AuthContext';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { getOptimizedImageUrl } from '../../utils/imageKit';
 
 export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -73,9 +74,10 @@ export const Navbar: React.FC = () => {
           <Link to="/" className="flex items-center gap-2.5 group">
             {branding?.logoUrl ? (
               <img
-                src={branding.logoUrl}
+                src={getOptimizedImageUrl(branding.logoUrl, { width: 450, quality: 95 })}
                 alt={branding.brandName || 'ScaleUp Media'}
-                className="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
+                className="h-10 sm:h-12 md:h-14 w-auto max-w-[190px] sm:max-w-[240px] md:max-w-[280px] object-contain object-left transition-transform group-hover:scale-105"
+                loading="eager"
               />
             ) : (
               <>

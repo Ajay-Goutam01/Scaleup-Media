@@ -13,6 +13,7 @@ import {
 import { projectsApi } from '../api/projects';
 import { Project } from '../types';
 import { useSettings } from '../context/SettingsContext';
+import { getOptimizedImageUrl } from '../utils/imageKit';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -149,7 +150,7 @@ export const SelectedProjectsSection: React.FC = () => {
                 {/* Image & Container */}
                 <div className="relative w-full h-64 sm:h-72 md:h-80 overflow-hidden bg-[var(--theme-surface-secondary)]">
                   <img
-                    src={project.thumbnail}
+                    src={getOptimizedImageUrl(project.thumbnail, { width: 800, quality: 85 })}
                     alt={project.title}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                     loading="lazy"

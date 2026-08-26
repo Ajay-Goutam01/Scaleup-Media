@@ -11,6 +11,14 @@ export interface IContactSettings extends Document {
   linkedin: string;
   youtube: string;
   address: string;
+  // Founder / Footer Profile fields
+  founderName: string;
+  founderBio: string;
+  founderPhotoUrl: string;
+  founderPhotoFileId: string;
+  founderLinkedin: string;
+  founderFacebook: string;
+  founderYoutube: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +64,35 @@ const ContactSettingsSchema = new Schema<IContactSettings>(
     address: {
       type: String,
       default: 'India / Global Digital Agency',
+    },
+    founderName: {
+      type: String,
+      default: 'Shivam',
+    },
+    founderBio: {
+      type: String,
+      default:
+        'Building brands through smart business strategy, creative marketing and high-impact content. From shooting and editing to paid advertising, we turn ideas into digital growth.',
+    },
+    founderPhotoUrl: {
+      type: String,
+      default: '',
+    },
+    founderPhotoFileId: {
+      type: String,
+      default: '',
+    },
+    founderLinkedin: {
+      type: String,
+      default: '',
+    },
+    founderFacebook: {
+      type: String,
+      default: '',
+    },
+    founderYoutube: {
+      type: String,
+      default: '',
     },
   },
   {
