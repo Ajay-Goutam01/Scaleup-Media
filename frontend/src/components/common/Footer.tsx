@@ -10,7 +10,6 @@ import {
   Youtube,
   ArrowUpRight,
   ExternalLink,
-  Shield,
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -214,18 +213,12 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--theme-text-secondary)]">
           <p>© {currentYear} ScaleUp Media. All rights reserved. Precision Built for Modern Digital Growth.</p>
-          <div className="flex items-center gap-6">
-            <Link to="/admin/login" className="hover:text-[var(--theme-accent)] flex items-center gap-1 transition-colors">
-              <Shield className="w-3.5 h-3.5" />
-              <span>Admin Access</span>
-            </Link>
-          </div>
         </div>
 
         {/* Developer Credit — Absolute Bottom Element */}
         <div className="mt-8 pt-6 border-t border-[var(--theme-border)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--theme-text-secondary)]">
           <div className="flex items-center gap-2 text-center sm:text-left flex-wrap justify-center sm:justify-start">
-            <span className="opacity-80">Crafted & Developed by</span>
+            <span className="font-medium text-[var(--theme-text-secondary)]">Crafted & Developed by</span>
             <span className="font-bold text-[var(--theme-text)] tracking-wide">
               Ajay Goutam
             </span>
@@ -234,7 +227,7 @@ export const Footer: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <a
               href="mailto:goutamajay308@gmail.com"
-              className="inline-flex items-center gap-1.5 text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors group"
+              className="inline-flex items-center gap-1.5 font-medium text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors group"
               aria-label="Email Developer Ajay Goutam"
             >
               <Mail className="w-3.5 h-3.5 text-[var(--theme-accent)] group-hover:scale-110 transition-transform" />
@@ -243,7 +236,7 @@ export const Footer: React.FC = () => {
 
             <a
               href="tel:+918827479058"
-              className="inline-flex items-center gap-1.5 text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors group"
+              className="inline-flex items-center gap-1.5 font-medium text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors group"
               aria-label="Call Developer Ajay Goutam"
             >
               <Phone className="w-3.5 h-3.5 text-[var(--theme-accent)] group-hover:scale-110 transition-transform" />

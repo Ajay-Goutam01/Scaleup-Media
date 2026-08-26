@@ -195,13 +195,15 @@ export const Navbar: React.FC = () => {
               <span>Start a Project →</span>
             </a>
 
-            <Link
-              to={isAuthenticated ? '/admin' : '/admin/login'}
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3 text-xs font-bold text-[var(--theme-text-secondary)] hover:text-[var(--theme-text)] rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] touch-target"
-            >
-              {isAuthenticated ? 'Admin Dashboard' : 'Admin Login'}
-            </Link>
+            {isAuthenticated && (
+              <Link
+                to="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3 text-xs font-bold text-[var(--theme-text-secondary)] hover:text-[var(--theme-text)] rounded-xl bg-[var(--theme-surface-secondary)] border border-[var(--theme-border)] touch-target"
+              >
+                CMS Dashboard
+              </Link>
+            )}
           </div>
         </div>
       )}

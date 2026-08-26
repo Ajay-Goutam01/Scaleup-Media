@@ -23,10 +23,10 @@ export const THEME_PRESETS: Record<string, ThemePresetConfig> = {
     surfaceColor: '#FFFFFF',
     surfaceSecondaryColor: '#F1F5F9',
     primaryColor: '#2563EB',
-    accentColor: '#08BDF5',
+    accentColor: '#0284C7',
     accentSecondaryColor: '#2563EB',
     textColor: '#07111F',
-    secondaryTextColor: '#667085',
+    secondaryTextColor: '#334155',
     borderColor: '#DCE3EA',
   },
   'scaleup-navy': {
